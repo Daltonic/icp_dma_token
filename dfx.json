@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "dma_backend": {
+      "main": "src/dma_backend/main.mo",
+      "type": "motoko"
+    },
+    "dma_frontend": {
+      "dependencies": [
+        "dma_backend"
+      ],
+      "source": [
+        "src/dma_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "dma_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

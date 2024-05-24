@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { dma_backend } from 'declarations/dma_backend'
+import { Principal } from '@dfinity/principal'
 
 function Balance() {
-  async function handleClick() {
-    console.log('Balance Button Clicked')
+  const [account, setAccount] = useState('')
+  const [balance, setBalance] = useState('')
+  const [symbol, setSymbol] = useState('')
+
+  const handleClick = async () => {
+    const principal = Principal.fromText(account)
+    const result = await dma_backend.balanceOf(principal)
+    const symbol = await dma_backend.getSymbol()
+
+    setBalance(result.toLocaleString())
+    setSymbol(symbol)
   }
 
   return (
@@ -13,6 +24,8 @@ function Balance() {
           id="balance-principal-id"
           type="text"
           placeholder="Enter a Principal ID"
+          value={account}
+          onChange={(e) => setAccount(e.target.value)}
         />
       </p>
       <p className="trade-buttons">
@@ -20,7 +33,9 @@ function Balance() {
           Check Balance
         </button>
       </p>
-      <p>This account has a balance of XYZ.</p>
+      {balance && (
+        <p>This account has a balance of {balance + ' ' + symbol}.</p>
+      )}
     </div>
   )
 }

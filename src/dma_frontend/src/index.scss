@@ -1,37 +1,164 @@
+$primary-color: #2196F3; // blue
+$secondary-color: #F7F7F7; // light gray
+$accent-color: #8BC34A; // green
+$background-color: #E5E5E5; // dark gray
+$dark-color: #333333; // dark text
+$light-color: #FFFFFF; // light text
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: $background-color;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
 body {
-  font-family: sans-serif;
-  font-size: 1.5rem;
+  padding: 0;
+  margin: 0;
 }
 
-img {
-  max-width: 50vw;
-  max-height: 25vw;
+span:after {
+  content: " ";
+  display: inline-block;
+  width: 2%;
+}
+
+fieldset {
+  float: left;
+  padding-right: 18px;
+  border: none;
+  margin: 0;
+}
+
+#logo {
+  font-family: "Times";
+  font-size: 24px;
+  font-weight: bold;
+  color: $dark-color;
+}
+
+.window {
+  position: relative;
+  cursor: default;
+  margin: 2em auto;
+  width: 80%;
+  background: $primary-color;
+  color: $light-color;
+  border: none;
+  padding: 1em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 640px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.window.white {
+  background: $secondary-color;
+  color: $dark-color;
+  border-color: $primary-color;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.window.half-width {
+  width: 50%;
+}
+
+.window h1 {
+  text-align: center;
+  margin-bottom: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: $dark-color;
+}
+
+.window.blue p {
+  color: $light-color;
+  text-shadow: 0 0 2px $primary-color;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: 0.2s all ease-in;
+  border-radius: 5px;
+  padding: 0.5em 1em;
+  background: $primary-color;
+  color: $light-color;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+button.full-width {
   display: block;
-  margin: auto;
+  text-align: center;
+  width: 100%;
 }
 
-form {
+button:hover {
+  transform: translate3d(0.25em, 0.25em, 10em);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
+  background: $accent-color;
+}
+
+button:disabled {
+  transform: translate3d(0.25em, 0.25em, 10em);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
+  background: gray;
+  border: 1px outset #707070;
+  color: $dark-color;
+}
+
+input,
+textarea {
+  background: $background-color;
+  color: $dark-color;
+  width: 100%;
+  max-width: 100%;
+  font-size: 16px;
+  padding: 0.5em;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+input:disabled {
+  background: #505070;
+  color: #d0d0d0;
+  border: 2px solid #505070;
+}
+
+.window > textarea {
+  width: 100%;
+  border: none;
+  resize: vertical;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+}
+
+.trade-buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+
+div .transfer {
   display: flex;
   justify-content: center;
-  gap: 0.5em;
-  flex-flow: row wrap;
-  max-width: 40vw;
   margin: auto;
-  align-items: baseline;
-}
-
-button[type="submit"] {
-  padding: 5px 20px;
-  margin: 10px auto;
-  float: right;
-}
-
-#greeting {
-  margin: 10px auto;
-  padding: 10px 60px;
-  border: 1px solid #222;
-}
-
-#greeting:empty {
-  display: none;
 }

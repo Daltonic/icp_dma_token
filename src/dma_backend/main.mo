@@ -1,13 +1,16 @@
 import Principal "mo:base/Principal";
 import HashMap "mo:base/HashMap";
 import Debug "mo:base/Debug";
+import Iter "mo:base/Iter";
 
 actor DMA {
   // var owner : Principal = Principal.fromText("wcgdh-t6c5w-5qidx-efbic-7dzfn-6ltyn-bjofb-oydfw-vnbrb-ezqqf-lqe");
-  var totalSupply : Nat = 1000000000;
-  var name : Text = "Dapp Mentors Academy";
-  var symbol : Text = "DMA";
-  var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);
+  let totalSupply : Nat = 1000000000;
+  let name : Text = "Dapp Mentors Academy";
+  let symbol : Text = "DMA";
+
+  private stable var balancesTemp : [(Principal, Nat)] = [];
+  private var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);
 
   public query func balanceOf(_owner : Principal) : async Nat {
     let balance : Nat = switch (balances.get(_owner)) {
@@ -30,11 +33,9 @@ actor DMA {
   };
 
   public shared (msg) func transfer(to : Principal, amount : Nat) : async Text {
-    let self = Principal.fromActor(DMA);
-    // this condition only runs once
-    if (totalSupply > 0) {
+    let self = Principal.fromActor(DMA); // Delegating the contract principal some faucet balances
+    if (balances.size() < 1) { // Ensuring that this action only occurs ones
       balances.put(self, totalSupply);
-      totalSupply := 0;
     };
 
     let fromBalance = await balanceOf(msg.caller);
@@ -54,5 +55,14 @@ actor DMA {
 
   public query func getSymbol() : async Text {
     return symbol;
+  };
+
+  system func preupgrade() {
+    balancesTemp := Iter.toArray(balances.entries());
+  };
+
+  system func postupgrade() {
+    balances := HashMap.fromIter<Principal, Nat>(balancesTemp.vals(), 1, Principal.equal, Principal.hash);
+    Debug.print(debug_show("Canister Upgraded!"));
   };
 };

@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { dma_backend } from 'declarations/dma_backend'
+import { AuthClient } from '@dfinity/auth-client'
+import { canisterId, createActor } from 'declarations/dma_backend'
 
-function Faucet() {
+function Faucet({ userPrincipal }) {
   const [message, setMessage] = useState('')
 
   const handleClick = async () => {
+    const authClient = await AuthClient.create()
+    if (!(await authClient.isAuthenticated()))
+      return alert('You need to be logged in first!')
+
     setMessage('Funding...')
-    const result = await dma_backend.fundWallet()
+    const identity = authClient.getIdentity()
+    const authenticatedCanister = createActor(canisterId, {
+      agentOptions: {
+        identity,
+      },
+    })
+
+    const result = await authenticatedCanister.fundWallet()
     setMessage(result.toString())
   }
 
@@ -22,6 +34,18 @@ function Faucet() {
     return () => clearTimeout(timeoutId)
   }, [message])
 
+  const truncate = (text, startChars, endChars, maxLength) => {
+    if (text.length > maxLength) {
+      let start = text.substring(0, startChars)
+      let end = text.substring(text.length - endChars, text.length)
+      while (start.length + end.length < maxLength) {
+        start = start + '.'
+      }
+      return start + end
+    }
+    return text
+  }
+
   return (
     <div className="blue window">
       <h2>
@@ -31,7 +55,10 @@ function Faucet() {
         Faucet
       </h2>
       <label>
-        Get your free DMA tokens here! Claim 10,000 DMA coins to your account.
+        Get your free DMA tokens here! Claim 10,000 DMA coins to your account{' '}
+        {userPrincipal && userPrincipal.length > 10 && (
+          <strong>{truncate(userPrincipal, 5, 3, 11)}</strong>
+        )}
       </label>
       <p className="trade-buttons">
         <button id="btn-payout" onClick={handleClick} disabled={message != ''}>

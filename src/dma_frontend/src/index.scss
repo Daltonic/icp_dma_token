@@ -40,6 +40,12 @@ fieldset {
   font-size: 24px;
   font-weight: bold;
   color: $dark-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h1 {
+     flex-grow: 1;
+  }
 }
 
 .window {

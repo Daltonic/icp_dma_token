@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { dma_backend } from 'declarations/dma_backend'
+import { canisterId, createActor } from 'declarations/dma_backend'
 import { Principal } from '@dfinity/principal'
+import { AuthClient } from '@dfinity/auth-client'
 
 function Transfer() {
   const [account, setAccount] = useState('')
@@ -9,10 +10,24 @@ function Transfer() {
 
   const handleClick = async () => {
     if (!account || !amount || amount < 1) return
+    const authClient = await AuthClient.create()
+    if (!(await authClient.isAuthenticated()))
+      return alert('You need to be logged in first!')
+
     setMessage('Transfering...')
 
+    const identity = authClient.getIdentity()
+    const authenticatedCanister = createActor(canisterId, {
+      agentOptions: {
+        identity,
+      },
+    })
+
     const principal = Principal.fromText(account)
-    const result = await dma_backend.transfer(principal, Number(amount))
+    const result = await authenticatedCanister.transfer(
+      principal,
+      Number(amount)
+    )
     setMessage(result.toString())
 
     setAccount('')
